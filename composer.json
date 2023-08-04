@@ -1,0 +1,51 @@
+{
+    "name": "hds-solutions/laravel-api-helpers",
+    "description": "A package with helpers to generate APIs on your Laravel project",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Hermann D. Schimpf",
+            "email": "hschimpf@hds-solutions.net"
+        }
+    ],
+    "require": {
+        "php": "^8.0|^8.1",
+        "laravel/framework": "^9.0|^10.0"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "HDSSolutions\\Laravel\\API\\": "src/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.6",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "roave/security-advisories": "dev-latest"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HDSSolutions\\Laravel\\API\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "test --coverage-html tests/coverage"
+        ]
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
