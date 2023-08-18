@@ -30,7 +30,11 @@ abstract class ResourceOrders {
         protected Request $request,
     ) {}
 
+    protected function before(Builder $query): void {}
+
     final public function handle(Builder $query, Closure $next): Builder | Collection | LengthAwarePaginator {
+        $this->before($query);
+
         // check if query param was not defined
         if (null === $order = $this->request->query('order')) {
             // add default sorting fields
@@ -56,8 +60,12 @@ abstract class ResourceOrders {
             $this->addQueryOrder($query, $value[$direction], $direction);
         }
 
+        $this->after($query);
+
         return $next($query);
     }
+
+    protected function after(Builder $query): void {}
 
     private function clean(array &$order): void {
         sort($order);

@@ -58,7 +58,11 @@ abstract class ResourceFilters {
         protected Request $request,
     ) {}
 
+    protected function before(Builder $query): void {}
+
     final public function handle(Builder $query, Closure $next): Builder | Collection | LengthAwarePaginator {
+        $this->before($query);
+
         foreach ($this->allowed_columns as $column => $operators) {
             // ignore filter if not specified in params
             if (is_null($param = $this->request->query($column))) {
@@ -101,8 +105,12 @@ abstract class ResourceFilters {
             }
         }
 
+        $this->after($query);
+
         return $next($query);
     }
+
+    protected function after(Builder $query): void {}
 
     private function addQueryFilter(Builder $query, string $column, string $operator, $value): void {
         // check if a method with the param name exists
