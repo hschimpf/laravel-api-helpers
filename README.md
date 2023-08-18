@@ -595,6 +595,9 @@ Example response:
 ```
 
 ## Extras
+### Before and after callbacks
+The `ResourceFilters` and `ResourceOrders` classes have two methods (`before` & `after`) that allow a better customization on the query builder. You can override them to make more manipulations to the query builder.
+
 ### ResourceRequest
 The `ResourceRequest` class has the following features:
 
