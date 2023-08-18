@@ -4,8 +4,10 @@ namespace HDSSolutions\Laravel\API;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use RuntimeException;
 
 abstract class ResourceFilters {
@@ -23,7 +25,7 @@ abstract class ResourceFilters {
         'gte' => '>=',
         'ne'  => '!=',
         'has' => 'like',
-        'in'  => null,
+        'in'  => 'in',
     ];
 
     /**
@@ -56,7 +58,7 @@ abstract class ResourceFilters {
         protected Request $request,
     ) {}
 
-    final public function handle(Builder $query, Closure $next): void {
+    final public function handle(Builder $query, Closure $next): Builder | Collection | LengthAwarePaginator {
         foreach ($this->allowed_columns as $column => $operators) {
             // ignore filter if not specified in params
             if (is_null($param = $this->request->query($column))) {
@@ -99,7 +101,7 @@ abstract class ResourceFilters {
             }
         }
 
-        $next($query);
+        return $next($query);
     }
 
     private function addQueryFilter(Builder $query, string $column, string $operator, $value): void {
