@@ -119,7 +119,7 @@ abstract class ResourceFilters {
         } elseif ($operator === 'in') {
             $query->whereIn(
                 column: $this->column_mappings[ $column ] ?? $column,
-                values: $value,
+                values: $this->parseValue($operator, $value),
             );
 
         } else {
@@ -138,6 +138,10 @@ abstract class ResourceFilters {
 
         if ($operator === 'has') {
             return "%$value%";
+        }
+
+        if ($operator === 'in' && !is_array($value)) {
+            return explode(',', $value);
         }
 
         return $value;
