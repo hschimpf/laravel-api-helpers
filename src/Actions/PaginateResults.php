@@ -3,17 +3,19 @@
 namespace HDSSolutions\Laravel\API\Actions;
 
 use Closure;
-use HDSSolutions\Laravel\API\Contracts\ResourceRequest;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 final class PaginateResults {
 
     public function __construct(
-        private ResourceRequest $request,
+        private Request $request,
     ) {}
 
-    public function handle(Builder $query, Closure $next): void {
-        $next($this->request->boolean('all')
+    public function handle(Builder $query, Closure $next): Collection | LengthAwarePaginator {
+        return $next($this->request->boolean('all')
             ? $query->get()
             : $query->paginate()->withQueryString()
         );

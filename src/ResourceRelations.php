@@ -4,9 +4,11 @@ namespace HDSSolutions\Laravel\API;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use InvalidArgumentException;
 
 abstract class ResourceRelations {
@@ -36,43 +38,41 @@ abstract class ResourceRelations {
         protected Request $request,
     ) {}
 
-    final public function handle(Builder $query, Closure $next): void {
+    final public function handle(Builder $query, Closure $next): Builder | Collection | LengthAwarePaginator {
         // check if query param wasn't defined and just return
-        if (null === $with = $this->request->query('with')) {
-            $next($query);
-
-            return;
-        }
-
-        // convert to array if it is a coma separated string
-        if (is_string($with) && str_contains($with, ',')) {
-            $with = explode(',', $with);
-        }
-
-        // must be an array
-        if ( !is_array($with)) {
-            throw new InvalidArgumentException(
-                message: 'Parameter "with" must be an array.',
-                code:    Response::HTTP_BAD_REQUEST,
-            );
-        }
-
-        foreach ($this->allowed_relations as $mapping => $relation_name) {
-            if (is_int($mapping)) {
-                $mapping = $relation_name;
+        if (null !== $with = $this->request->query('with')) {
+            // convert to array if it is a coma separated string
+            if (is_string($with) && str_contains($with, ',')) {
+                $with = explode(',', $with);
             }
 
-            // ignore relation if not specified in params
-            if ( !in_array($mapping, $with, true)) {
-                continue;
+            // must be an array
+            if ( !is_array($with)) {
+                throw new InvalidArgumentException(
+                    message: 'Parameter "with" must be an array.',
+                    code:    Response::HTTP_BAD_REQUEST,
+                );
             }
 
-            // check if a method with the relation name exists
-            if (method_exists($this, $method = explode('.', $mapping, 2)[0])) {
-                // redirect relation to the custom method implementation
-                $this->with[$relation_name] = fn(Relation $relation) => $this->$method($relation);
-            } else {
-                $this->with[] = $relation_name;
+            foreach ($this->allowed_relations as $mapping => $relation_name) {
+                if (is_int($mapping)) {
+                    $mapping = $relation_name;
+                }
+
+                // ignore relation if not specified in params
+                if ( !in_array($mapping, $with, true)) {
+                    continue;
+                }
+
+                foreach ((array) $relation_name as $relationship_name) {
+                    // check if a method with the relation name exists
+                    if (method_exists($this, $method = explode('.', $mapping, 2)[0])) {
+                        // redirect relation to the custom method implementation
+                        $this->with[$relation_name] = fn(Relation $relation) => $this->$method($relation);
+                    } else {
+                        $this->with[] = $relationship_name;
+                    }
+                }
             }
         }
 
@@ -84,7 +84,7 @@ abstract class ResourceRelations {
         // append relation counts to the query
         $query->withCount($this->with_count);
 
-        $next($query);
+        return $next($query);
     }
 
     private function parseWiths(): void {

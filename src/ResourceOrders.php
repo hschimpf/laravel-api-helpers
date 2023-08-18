@@ -4,8 +4,10 @@ namespace HDSSolutions\Laravel\API;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use InvalidArgumentException;
 
 abstract class ResourceOrders {
@@ -28,15 +30,13 @@ abstract class ResourceOrders {
         protected Request $request,
     ) {}
 
-    final public function handle(Builder $query, Closure $next): void {
+    final public function handle(Builder $query, Closure $next): Builder | Collection | LengthAwarePaginator {
         // check if query param was not defined
         if (null === $order = $this->request->query('order')) {
             // add default sorting fields
             $this->setDefaultOrder($query);
 
-            $next($query);
-
-            return;
+            return $next($query);
         }
 
         // must follow the syntax order[{index}][{direction}]={field}
@@ -56,7 +56,7 @@ abstract class ResourceOrders {
             $this->addQueryOrder($query, $value[$direction], $direction);
         }
 
-        $next($query);
+        return $next($query);
     }
 
     private function clean(array &$order): void {
