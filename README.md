@@ -112,7 +112,7 @@ class CountryFilters extends \HDSSolutions\Laravel\API\ResourceFilters {
     Accept: application/json
     ```
     Example response:
-    ```json
+    ```json5
     {
         "data": [
             {
@@ -141,7 +141,7 @@ class CountryFilters extends \HDSSolutions\Laravel\API\ResourceFilters {
     Accept: application/json
     ```
     Example response:
-    ```json
+    ```json5
     {
         "data": [
             {
@@ -229,7 +229,7 @@ The request sorting parameters must follow the following syntax: `order[{index}]
     Accept: application/json
     ```
     Example response:
-    ```json
+    ```json5
     {
         "data": [
             {
@@ -258,7 +258,7 @@ The request sorting parameters must follow the following syntax: `order[{index}]
     Accept: application/json
     ```
     Example response:
-    ```json
+    ```json5
     {
         "data": [
             {
@@ -337,7 +337,7 @@ class CountryRelations extends \HDSSolutions\Laravel\API\ResourceRelations {
     Accept: application/json
     ```
     Example response:
-    ```json
+    ```json5
     {
         "data": [
             {
@@ -376,7 +376,7 @@ It provides support for paginating the results or retrieving all records.
     Accept: application/json
     ```
     Example response:
-    ```json
+    ```json5
     {
         "data": [
             {
@@ -454,7 +454,7 @@ GET https://localhost/api/regions
 Accept: application/json
 ```
 Example response:
-```json
+```json5
 {
     "data": [
         {
@@ -537,7 +537,7 @@ GET https://localhost/api/regions?name[has]=aus
 Accept: application/json
 ```
 Example response:
-```json
+```json5
 {
     "data": [
         {
@@ -567,7 +567,7 @@ GET https://localhost/api/regions?regions_count[gt]=15&order[][desc]=name
 Accept: application/json
 ```
 Example response:
-```json
+```json5
 {
     "data": [
         ...
