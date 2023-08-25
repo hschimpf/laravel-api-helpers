@@ -685,5 +685,5 @@ Contributions are welcome! If you find any issues or would like to add new featu
 - [Hermann D. Schimpf](https://hds-solutions.net)
 
 # Licence
-This library is open-source software licensed under the [GPL-3.0 License](LICENSE).
+This library is open-source software licensed under the [MIT License](LICENSE).
 Please see the [License File](LICENSE) for more information.
