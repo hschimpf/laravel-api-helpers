@@ -2,7 +2,10 @@
 
 namespace HDSSolutions\Laravel\API;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 use RuntimeException;
 
 class ResourceRequest extends FormRequest implements Contracts\ResourceRequest {
@@ -47,6 +50,13 @@ class ResourceRequest extends FormRequest implements Contracts\ResourceRequest {
 
     protected function destroy(): array {
         return [];
+    }
+
+    protected function failedValidation(Validator $validator): void {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Request validation failed',
+            'data'    => $validator->errors(),
+        ], Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 
 }
