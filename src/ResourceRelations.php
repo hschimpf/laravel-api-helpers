@@ -65,6 +65,8 @@ abstract class ResourceRelations {
                 }
 
                 foreach ((array) $relation_name as $relationship_name) {
+                    // convert relation_name => relationName
+                    $relationship_name = str($relationship_name)->studly()->lcfirst()->value();
                     // check if a method with the relation name exists
                     if (method_exists($this, $method = explode('.', $mapping, 2)[0])) {
                         // redirect relation to the custom method implementation
