@@ -38,7 +38,11 @@ abstract class ResourceRelations {
         protected Request $request,
     ) {}
 
+    protected function before(Builder $query): void {}
+
     final public function handle(Builder $query, Closure $next): Builder | Collection | LengthAwarePaginator {
+        $this->before($query);
+
         // check if query param wasn't defined and just return
         if (null !== $with = $this->request->query('with')) {
             // convert to array if it is a coma separated string
@@ -86,8 +90,12 @@ abstract class ResourceRelations {
         // append relation counts to the query
         $query->withCount($this->with_count);
 
+        $this->after($query);
+
         return $next($query);
     }
+
+    protected function after(Builder $query): void {}
 
     private function parseWiths(): void {
         $with = [];
