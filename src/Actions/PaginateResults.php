@@ -15,9 +15,11 @@ final class PaginateResults {
     ) {}
 
     public function handle(Builder $query, Closure $next): Collection | LengthAwarePaginator {
+        $perPage = $this->request->integer('perPage', $query->getModel()->getPerPage());
+
         return $next($this->request->boolean('all')
             ? $query->get()
-            : $query->paginate()->withQueryString()
+            : $query->paginate($perPage)->withQueryString()
         );
     }
 
