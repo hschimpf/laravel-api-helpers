@@ -2,10 +2,10 @@
 
 This library simplifies the process of building API controllers by providing convenient classes for managing filtering, ordering, relationship loading, and pagination of resource collections.
 
-[![Latest Stable Version](http://poser.pugx.org/hds-solutions/laravel-api-helpers/v)](https://packagist.org/packages/hds-solutions/laravel-api-helpers)
-[![Total Downloads](http://poser.pugx.org/hds-solutions/laravel-api-helpers/downloads)](https://packagist.org/packages/hds-solutions/laravel-api-helpers)
-[![License](http://poser.pugx.org/hds-solutions/laravel-api-helpers/license)](https://packagist.org/packages/hds-solutions/laravel-api-helpers)
-[![PHP Version Require](http://poser.pugx.org/hds-solutions/laravel-api-helpers/require/php)](https://packagist.org/packages/hds-solutions/laravel-api-helpers)
+[![Latest stable version](https://img.shields.io/packagist/v/hds-solutions/laravel-api-helpers?style=flat-square&label=latest&color=009664)](https://github.com/hschimpf/laravel-api-helpers/releases/latest)
+[![License](https://img.shields.io/github/license/hschimpf/laravel-api-helpers?style=flat-square&color=80B2CB)](https://github.com/hschimpf/laravel-api-helpers/blob/main/LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/hds-solutions/laravel-api-helpers?style=flat-square&color=878787)](https://packagist.org/packages/hds-solutions/laravel-api-helpers)
+[![Required PHP version](https://img.shields.io/packagist/dependency-v/hds-solutions/laravel-api-helpers/php?style=flat-square&color=006496&logo=php&logoColor=white)](https://packagist.org/packages/hds-solutions/laravel-api-helpers)
 
 ## Features
 
