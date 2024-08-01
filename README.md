@@ -50,13 +50,14 @@ The available operators are:
 - `gt`: Translates to a `field_name > "value"` filter.
 - `gte`: Translates to a `field_name >= "value"` filter.
 - `in`: Translates to a `field_name IN ("value1", "value2", ...)` filter.
+- `btw`: Translates to a `field_name BETWEEN "value1" AND "value2"` filter.
 
 Operators are also grouped by field type:
 
 - `string`: Translates to the operators `eq`, `ne` and `has`.
-- `numeric`: Translates to the operators `eq`, `ne`, `lt`, `lte`, `gt`, `gte` and `in`.
+- `numeric`: Translates to the operators `eq`, `ne`, `lt`, `lte`, `gt`, `gte`, `in`, and `btw`.
 - `boolean`: Translates to the operators `eq` and `ne`.
-- `date`: Translates to the operators `eq`, `ne`, `lt`, `lte`, `gt`, and `gte`.
+- `date`: Translates to the operators `eq`, `ne`, `lt`, `lte`, `gt`, `gte`, and `btw`.
 
 #### Example implementation
 
@@ -70,7 +71,7 @@ class CountryFilters extends \HDSSolutions\Laravel\API\ResourceFilters {
     protected array $allowed_columns = [
         'name'      => 'string',
         'code'      => 'string',
-        'something' => [ 'gt', 'lt' ],
+        'size_km2'  => [ 'gt', 'lt', 'btw' ],
     ];
 
 }
@@ -93,7 +94,7 @@ class CountryFilters extends \HDSSolutions\Laravel\API\ResourceFilters {
     protected array $allowed_columns = [
         'name'          => 'string',
         'code'          => 'string',
-        'something'     => [ 'gt', 'lt' ],
+        'size_km2'      => [ 'gt', 'lt', 'btw' ],
         'regions_count' => 'number',
     ];
     
@@ -119,6 +120,37 @@ class CountryFilters extends \HDSSolutions\Laravel\API\ResourceFilters {
             {
                 "id": 123,
                 "name": "Country name",
+                "size_km2": 125000,
+                ...
+            },
+            { ... },
+            { ... },
+            { ... },
+            ...
+        ],
+        "links": {
+            ...
+        }
+        "meta": {
+            ...
+        }
+    }
+    ```
+
+- Filtering by country size:
+
+    ```http request
+    GET https://localhost/api/countries?size_km2[btw]=100000,500000
+    Accept: application/json
+    ```
+    Example response:
+    ```json5
+    {
+        "data": [
+            {
+                "id": 123,
+                "name": "Country name",
+                "size_km2": 125000,
                 ...
             },
             { ... },
@@ -148,6 +180,7 @@ class CountryFilters extends \HDSSolutions\Laravel\API\ResourceFilters {
             {
                 "id": 123,
                 "name": "Country name",
+                "size_km2": 125000,
                 ...
             },
             { ... },

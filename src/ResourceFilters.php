@@ -26,6 +26,7 @@ abstract class ResourceFilters {
         'ne'  => '!=',
         'has' => 'like',
         'in'  => 'in',
+        'btw' => 'between',
     ];
 
     /**
@@ -35,9 +36,9 @@ abstract class ResourceFilters {
      */
     private const TYPES = [
         'string'  => [ 'eq', 'ne', 'has' ],
-        'numeric' => [ 'eq', 'ne', 'lt', 'lte', 'gt', 'gte', 'in' ],
+        'numeric' => [ 'eq', 'ne', 'lt', 'lte', 'gt', 'gte', 'in', 'btw' ],
         'boolean' => [ 'eq', 'ne' ],
-        'date'    => [ 'eq', 'ne', 'lt', 'lte', 'gt', 'gte' ],
+        'date'    => [ 'eq', 'ne', 'lt', 'lte', 'gt', 'gte', 'btw' ],
     ];
 
     /**
@@ -123,13 +124,21 @@ abstract class ResourceFilters {
                 $value,
             ));
 
-        // capture special case for WHERE IN
+        // special case for WHERE IN
         } elseif ($operator === 'in') {
             $query->whereIn(
                 column: $this->column_mappings[ $column ] ?? $column,
                 values: $this->parseValue($operator, $value),
             );
 
+        // special case for BETWEEN
+        } elseif ($operator === 'btw') {
+            $query->whereBetween(
+                column: $this->column_mappings[ $column ] ?? $column,
+                values: $this->parseValue($operator, $value),
+            );
+
+        // fallback to default filtering
         } else {
             $query->where(
                 column:   $this->column_mappings[ $column ] ?? $column,
@@ -150,6 +159,17 @@ abstract class ResourceFilters {
 
         if ($operator === 'in' && !is_array($value)) {
             return explode(',', $value);
+        }
+
+        if ($operator === 'btw') {
+            if (count($value = explode(',', $value)) !== 2) {
+                throw new RuntimeException(
+                    message: 'Invalid value count for "btw" filter',
+                    code: Response::HTTP_BAD_REQUEST,
+                );
+            }
+
+            return $value;
         }
 
         return $value;
