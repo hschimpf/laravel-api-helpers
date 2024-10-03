@@ -45,18 +45,8 @@ abstract class ResourceRelations {
 
         // check if query param wasn't defined and just return
         if (null !== $with = $this->request->query('with')) {
-            // convert to array if it is a coma separated string
-            if (is_string($with) && str_contains($with, ',')) {
-                $with = explode(',', $with);
-            }
-
-            // must be an array
-            if ( !is_array($with)) {
-                throw new InvalidArgumentException(
-                    message: 'Parameter "with" must be an array.',
-                    code:    Response::HTTP_BAD_REQUEST,
-                );
-            }
+            // convert to array if it is a string
+            $with = is_string($with) ? explode(',', $with) : $with;
 
             foreach ($this->allowed_relations as $mapping => $relation_name) {
                 if (is_int($mapping)) {
