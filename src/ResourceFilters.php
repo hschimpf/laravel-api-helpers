@@ -77,7 +77,7 @@ abstract class ResourceFilters {
 
             if (is_string($operators)) {
                 // validate that field type exists
-                if ( !array_key_exists($operators, ResourceFilters::TYPES)) {
+                if ( !array_key_exists($operators, self::TYPES)) {
                     throw new RuntimeException(
                         message: sprintf('Invalid "%s" field type', $operators),
                         code:    Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -85,7 +85,7 @@ abstract class ResourceFilters {
                 }
 
                 // load operators for specified field type
-                $operators = ResourceFilters::TYPES[ $operators ];
+                $operators = self::TYPES[ $operators ];
             }
 
             foreach ($operators as $operator) {
@@ -95,7 +95,7 @@ abstract class ResourceFilters {
                 }
 
                 // validate that operator is valid
-                if ( !array_key_exists($operator, ResourceFilters::OPERATORS)) {
+                if ( !array_key_exists($operator, self::OPERATORS)) {
                     throw new RuntimeException(
                         message: sprintf('Invalid "%s" operator', $operator),
                         code:    Response::HTTP_BAD_REQUEST,
@@ -142,7 +142,7 @@ abstract class ResourceFilters {
         } else {
             $query->where(
                 column:   $this->column_mappings[ $column ] ?? $column,
-                operator: ResourceFilters::OPERATORS[ $operator ],
+                operator: self::OPERATORS[ $operator ],
                 value:    $this->parseValue($operator, $value),
             );
         }
