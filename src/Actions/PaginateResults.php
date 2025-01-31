@@ -10,14 +10,26 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class PaginateResults {
 
+    public static string $perPage = 'perPage';
+
+    public static string $all = 'all';
+
     public function __construct(
         private Request $request,
     ) {}
 
-    public function handle(Builder $query, Closure $next): Collection | LengthAwarePaginator {
-        $perPage = $this->request->integer('perPage', $query->getModel()->getPerPage());
+    public static function definePerPageParameterName(string $perPage): void {
+        self::$perPage = $perPage;
+    }
 
-        return $next($this->request->boolean('all')
+    public static function defineShowAllParameterName(string $all): void {
+        self::$all = $all;
+    }
+
+    public function handle(Builder $query, Closure $next): Collection | LengthAwarePaginator {
+        $perPage = $this->request->integer(self::$perPage, $query->getModel()->getPerPage());
+
+        return $next($this->request->boolean(self::$all)
             ? $query->get()
             : $query->paginate($perPage)->withQueryString()
         );
