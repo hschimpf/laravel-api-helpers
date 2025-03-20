@@ -10,7 +10,7 @@ use RuntimeException;
 
 class ResourceRequest extends FormRequest implements Contracts\ResourceRequest {
 
-    final public function hash(string $append = null): string {
+    final public function hash(?string $append = null): string {
         $parameters = $this->route()?->parameters() ?? [];
 
         return sprintf('%s %s [%s@%s]',

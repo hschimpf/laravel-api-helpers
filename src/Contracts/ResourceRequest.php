@@ -11,7 +11,7 @@ interface ResourceRequest {
      *
      * @return string Request hashed identifier
      */
-    public function hash(string $append = null): string;
+    public function hash(?string $append = null): string;
 
     public function authorize(): bool;
 
